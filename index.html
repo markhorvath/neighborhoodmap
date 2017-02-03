@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neighborhood Maps Project</title>
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
     <div class="container">
-        <div>
-
-
-
-
-
-
-
-
-
-
-
+        <div class="listview">
+            <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            </ul>
         </div>
         <div id="map">
         </div>
@@ -32,8 +26,25 @@
         //initialize new google map
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 38.907192, lng: -77.036871},
-            zoom: 11
+            zoom: 12
         });
+
+        var locations = [{lat: 38.886745, lng: -77.010115}, {lat: 38.8865, lng: -77.018798}];
+        var marker = new google.maps.Marker({
+            position: locations[0],
+            map: map,
+            title: "US Senate",
+            animation: google.maps.Animation.DROP
+        });
+
+        var infowindow = new google.maps.InfoWindow({
+            content: "The United States Senate"
+        });
+
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+
 }
 
     </script>
