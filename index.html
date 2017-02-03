@@ -30,20 +30,29 @@
         });
 
         var locations = [{lat: 38.886745, lng: -77.010115}, {lat: 38.8865, lng: -77.018798}];
-        var marker = new google.maps.Marker({
-            position: locations[0],
-            map: map,
-            title: "US Senate",
-            animation: google.maps.Animation.DROP
-        });
+        var markers = [];
 
-        var infowindow = new google.maps.InfoWindow({
-            content: "The United States Senate"
-        });
+        for (i = 0; i < locations.length; i++){
+            var marker = new google.maps.Marker({
+                position: locations[i],
+                map: map,
+                title: "",
+                animation: google.maps.Animation.DROP
+            });
 
-        marker.addListener('click', function() {
+            marker.addListener('click', function() {
             infowindow.open(map, marker);
-        });
+            });
+
+            markers.push(marker);
+            var infowindow = new google.maps.InfoWindow({
+            content: "The United States Senate"
+            });
+        };
+
+
+
+
 
 }
 

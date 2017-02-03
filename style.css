@@ -30,13 +30,13 @@ hr {
 #map {
       bottom:0px;
       height: 100%;
-      left: 31%;
+      left: 25%;
       position: absolute;
       right: 0px;
 }
 .listview {
   height: 100%;
-  width: 31%;
+  width: 25%;
   position: absolute;
   background: blue;
 }
