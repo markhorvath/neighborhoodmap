@@ -34,6 +34,10 @@ hr {
       position: absolute;
       right: 0px;
 }
+#pano {
+  height: 200px;
+  width: 200px;
+}
 .listview {
   height: 100%;
   width: 25%;
