@@ -7,9 +7,12 @@
 </head>
 <body>
     <div class="container">
-        <div>
+        <div class="listview">
+        <h1>Things to do in Tokyo:</h1>
+        <input id="show-loc" type="button" value="Show Markers">
+        <input id="hide-loc" type="button" value="Hide Markers">
           <ul data-bind="foreach: locationList">
-            <li data-bind="text: title"></li>
+            <li data-bind="text: title" id="list"></li>
           </ul>
 
         </div>

@@ -8,6 +8,19 @@ body {
 .container {
     height: 100%;
 }
+li {
+  background-color: white;
+  border-style: double;
+  border-color: red;
+  color: black;
+}
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+li:hover {
+  background-color: yellow;
+}
 input {
     font-size: 12px;
 }
@@ -17,8 +30,8 @@ h1 {
     margin: 0 0 10px 0;
     text-align: center;
 }
-#hide-listings,
-#show-listings {
+#hide-loc,
+#show-loc {
       width: 48%;
 }
 hr {
@@ -42,7 +55,6 @@ hr {
   height: 100%;
   width: 25%;
   position: absolute;
-  background: blue;
 }
 
 @media only screen and (max-width: 550px) {
