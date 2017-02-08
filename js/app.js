@@ -117,7 +117,7 @@ function initMap() {
           });
           var streetViewService = new google.maps.StreetViewService();
           var radius = 50;
-
+          //function to get streetview object from google maps api, from course
           function getStreetView(data, status) {
             if (status == google.maps.StreetViewStatus.OK) {
               var nearStreetViewLocation = data.location.latLng;
@@ -133,7 +133,7 @@ function initMap() {
                 };
               var panorama = new google.maps.StreetViewPanorama(
                 document.getElementById('pano'), panoramaOptions);
-            } else {
+            } else {//Is this okay to keep?  It's manipulating the DOM, correct?
               infowindow.setContent('<div>' + marker.title + '</div>' +
                 '<div>No Street View Found</div>');
             }
@@ -143,7 +143,7 @@ function initMap() {
           infowindow.open(map, marker);
         }
     }
-    //does this need to be an IFFE?  as of now it only animates the last marker
+
     function toggleBounce(marker) {
         if (marker.getAnimation() !== null) {
           marker.setAnimation(null);
@@ -185,6 +185,17 @@ var ViewModel = function() {
     model.forEach(function(item){
       self.locationList.push(new Location(item));
     });
+    this.newTitle = ko.observable("");
+    this.newLat = ko.observable("");
+    this.newLng = ko.observable("");
+    this.addLocation = function() {
+      if (this.newTitle() != "" && this.newLat() != "" && this.newLng() != "") {
+        this.locationList.push({title: this.newTitle(), location: {lat: this.newLat(), lng: this.newLng()}});
+        this.newTitle("");
+        this.newLat("");
+        this.newLng("");
+      }
+    }.bind(this);
 };
 
 viewModel = new ViewModel();
