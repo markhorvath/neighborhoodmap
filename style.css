@@ -17,6 +17,8 @@ li {
 ul {
   list-style: none;
   padding-left: 0;
+  float:left;
+  width:100%;
 }
 li:hover {
   background-color: yellow;
@@ -55,6 +57,7 @@ hr {
   height: 100%;
   width: 25%;
   position: absolute;
+  overflow-y: auto;
 }
 
 @media only screen and (max-width: 550px) {

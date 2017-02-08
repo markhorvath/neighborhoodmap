@@ -4,14 +4,14 @@ var markers = [];
 var viewModel;
 
 var model = [{
-    title: 'Imperial Palace',
+    title: 'Imperial Palace & East Garden (皇居)',
     location: {
       lat: 35.685360,
       lng: 139.753372
     }
   },
   {
-    title: 'Akihabara',
+    title: 'Akihabara Electric Town (秋葉原)',
     location: {
       lat: 35.702190,
       lng: 139.774459
@@ -43,6 +43,20 @@ var model = [{
     location: {
       lat: 35.693382,
       lng: 139.767303
+    }
+  },
+  {
+    title: 'Tapas Molecular Bar',
+    location: {
+      lat: 35.687058,
+      lng: 139.772695
+    }
+  },
+  {
+    title: 'Hakushu Teppanyaki 白秋',
+    location: {
+      lat: 35.656496,
+      lng: 139.700942
     }
   }
 ];
