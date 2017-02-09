@@ -1,5 +1,8 @@
 var map;
 var markers = [];
+var largeInfowindow;
+var defaultIcon;
+var highlightedIcon;
 
 var viewModel;
 
@@ -62,50 +65,89 @@ var model = [{
 ];
 
 function initMap() {
+
+    var styles = [
+          {
+            featureType: 'water',
+            stylers: [
+              { color: '#19a0d8' }
+            ]
+          },{
+            featureType: 'administrative',
+            elementType: 'labels.text.stroke',
+            stylers: [
+              { color: '#ffffff' },
+              { weight: 6 }
+            ]
+          },{
+            featureType: 'administrative',
+            elementType: 'labels.text.fill',
+            stylers: [
+              { color: '#FF6600' }
+            ]
+          },{
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [
+              { color: '#efe9e4' },
+              { lightness: -40 }
+            ]
+          },{
+            featureType: 'transit.station',
+            stylers: [
+              { weight: 9 },
+              { hue: '#e85113' }
+            ]
+          },{
+            featureType: 'road.highway',
+            elementType: 'labels.icon',
+            stylers: [
+              { visibility: 'off' }
+            ]
+          },{
+            featureType: 'water',
+            elementType: 'labels.text.stroke',
+            stylers: [
+              { lightness: 100 }
+            ]
+          },{
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [
+              { lightness: -100 }
+            ]
+          },{
+            featureType: 'poi',
+            elementType: 'geometry',
+            stylers: [
+              { visibility: 'on' },
+              { color: '#f0e4d3' }
+            ]
+          },{
+            featureType: 'road.highway',
+            elementType: 'geometry.fill',
+            stylers: [
+              { color: '#efe9e4' },
+              { lightness: -25 }
+            ]
+          }
+        ];
     //initialize new google map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 35.652832, lng: 139.839478},
         zoom: 11,
-        //styles: styles,
+        styles: styles,
         mapTypeControl: false
     });
+
+    viewModel.makeMarkers();
     //variable to be used in populating markers' infowindows
-    var largeInfowindow = new google.maps.InfoWindow();
+    largeInfowindow = new google.maps.InfoWindow();
 
-    var defaultIcon = makeMarkerIcon('FE7569');
+    defaultIcon = makeMarkerIcon('00FF00');
 
-    var highlightedIcon = makeMarkerIcon('FFFF24');
-    //For loop to create markers based on Model locations data
-    for (i = 0; i < model.length; i++){
-        var position = model[i].location;
-        var title = model[i].title;
-
-        var marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            id: i
-        });
-
-        markers.push(marker);
-
-        marker.addListener('click', function() {
-          makeInfoWindow(this, largeInfowindow);
-        });
-
-        marker.addListener('click', function() {
-          toggleBounce(this);
-        });
-
-        marker.addListener('mouseover', function() {
-          this.setIcon(highlightedIcon);
-        });
-
-        marker.addListener('mouseout', function() {
-          this.setIcon(defaultIcon);
-        });
-    };
+    highlightedIcon = makeMarkerIcon('FFFF24');
+}
     //function to populate marker-specific infowindow on click
     function makeInfoWindow(marker, infowindow) {
         if (infowindow.marker != marker) {
@@ -142,7 +184,7 @@ function initMap() {
 
           infowindow.open(map, marker);
         }
-    }
+    };
 
     function toggleBounce(marker) {
         if (marker.getAnimation() !== null) {
@@ -173,24 +215,83 @@ function initMap() {
           markers[i].setMap(map);
         }
     });
-};
 
-var Location = function(data) {
+
+var Location = function(data, marker) {
   this.title = ko.observable(data.title);
+
+  this.marker = marker;
+  this.marker.addListener('click', function() {
+    makeInfoWindow(this, largeInfowindow);
+  });
+
+  this.marker.addListener('click', function() {
+    toggleBounce(this);
+  });
+
+  this.marker.addListener('mouseover', function() {
+    this.setIcon(highlightedIcon);
+  });
+
+  this.marker.addListener('mouseout', function() {
+    this.setIcon(defaultIcon);
+  });
 };
 
 var ViewModel = function() {
     var self = this;
     this.locationList = ko.observableArray([]);
-    model.forEach(function(item){
-      self.locationList.push(new Location(item));
-    });
+    // model.forEach(function(item){
+    //   self.locationList.push(new Location(item));
+    // });
+    this.activateMarker = function(location) {
+      var marker = location.marker;
+      google.maps.event.trigger(marker, 'click');
+    };
+
+    this.makeMarkers = function() {
+      for(i = 0; i < model.length; i++) {
+        var position = model[i].location;
+        var title = model[i].title;
+
+        var marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: title,
+            animation: google.maps.Animation.DROP,
+            id: i,
+            icon: defaultIcon
+        });
+
+        self.locationList.push(new Location(model[i], marker));
+        markers.push(marker);
+      };
+    };
+
+    this.addMarker = function() {
+      var i = model.length - 1;
+      var position = model[i].location;
+        var title = model[i].title;
+
+        var marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: title,
+            animation: google.maps.Animation.DROP,
+            id: i,
+            icon: defaultIcon
+        });
+        self.locationList.push(new Location(model[i], marker));
+        markers.push(marker);
+    }
+
     this.newTitle = ko.observable("");
     this.newLat = ko.observable("");
     this.newLng = ko.observable("");
     this.addLocation = function() {
       if (this.newTitle() != "" && this.newLat() != "" && this.newLng() != "") {
-        this.locationList.push({title: this.newTitle(), location: {lat: this.newLat(), lng: this.newLng()}});
+        model.push({title: this.newTitle(), location: {lat: Number(this.newLat()), lng: Number(this.newLng())}});
+        this.addMarker();
         this.newTitle("");
         this.newLat("");
         this.newLng("");
@@ -201,3 +302,4 @@ var ViewModel = function() {
 viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);
+

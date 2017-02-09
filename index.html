@@ -12,7 +12,7 @@
             <input id="show-loc" type="button" value="Show Markers">
             <input id="hide-loc" type="button" value="Hide Markers">
             <ul data-bind="foreach: locationList">
-                <li data-bind="text: title" id="list"></li>
+                <li data-bind="text: title, click: $root.activateMarker" id="list"></li>
             </ul>
             <form data-bind="submit: addLocation">
             Add title, lat coord and lng coord:

@@ -11,8 +11,10 @@ body {
 li {
   background-color: white;
   border-style: double;
-  border-color: red;
+  border-color: #000000;
   color: black;
+  font-family: Papyrus, fantasy;
+  color : #000066;
 }
 ul {
   list-style: none;
@@ -21,7 +23,7 @@ ul {
   width:100%;
 }
 li:hover {
-  background-color: yellow;
+  background-color: #F9E559;
 }
 input {
     font-size: 12px;
@@ -35,6 +37,7 @@ h1 {
 #hide-loc,
 #show-loc {
       width: 48%;
+      background-color: #FF6600;
 }
 hr {
     background: #D0D7D9;
@@ -58,6 +61,7 @@ hr {
   width: 25%;
   position: absolute;
   overflow-y: auto;
+  background-color: #00FF00;
 }
 
 @media only screen and (max-width: 550px) {
