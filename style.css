@@ -68,6 +68,8 @@ hr {
   .listview {
     height: 31%;
     width: 100%;
+    position: absolute;
+    overflow-y: auto;
   }
   #map {
     height: 69%;
