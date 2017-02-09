@@ -64,7 +64,7 @@ hr {
   background-color: #00FF00;
 }
 
-@media only screen and (max-device-width: 650px) {
+@media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
   .listview {
     height: 31%;
     width: 100%;
