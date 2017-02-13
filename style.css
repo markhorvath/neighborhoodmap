@@ -39,6 +39,9 @@ h1 {
       width: 48%;
       background-color: #FF6600;
 }
+#search {
+  display: auto;
+}
 hr {
     background: #D0D7D9;
     height: 1px;
@@ -64,12 +67,10 @@ hr {
   background-color: #00FF00;
 }
 
-@media only screen and (min-device-width: 375px) and (max-device-width: 667px) {
+@media only screen and (min-device-width: 375px) and (max-device-width: 557px) {
   .listview {
     height: 31%;
     width: 100%;
-    position: absolute;
-    overflow-y: auto;
   }
   #map {
     height: 69%;

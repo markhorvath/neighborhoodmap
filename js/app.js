@@ -67,77 +67,63 @@ var model = [{
 function initMap() {
 
     var styles = [
-          {
-            featureType: 'water',
-            stylers: [
-              { color: '#19a0d8' }
-            ]
-          },{
-            featureType: 'administrative',
-            elementType: 'labels.text.stroke',
-            stylers: [
-              { color: '#ffffff' },
-              { weight: 6 }
-            ]
-          },{
-            featureType: 'administrative',
-            elementType: 'labels.text.fill',
-            stylers: [
-              { color: '#FF6600' }
-            ]
-          },{
-            featureType: 'road.highway',
-            elementType: 'geometry.stroke',
-            stylers: [
-              { color: '#efe9e4' },
-              { lightness: -40 }
-            ]
-          },{
-            featureType: 'transit.station',
-            stylers: [
-              { weight: 9 },
-              { hue: '#e85113' }
-            ]
-          },{
-            featureType: 'road.highway',
-            elementType: 'labels.icon',
-            stylers: [
-              { visibility: 'off' }
-            ]
-          },{
-            featureType: 'water',
-            elementType: 'labels.text.stroke',
-            stylers: [
-              { lightness: 100 }
-            ]
-          },{
-            featureType: 'water',
-            elementType: 'labels.text.fill',
-            stylers: [
-              { lightness: -100 }
-            ]
-          },{
-            featureType: 'poi',
-            elementType: 'geometry',
-            stylers: [
-              { visibility: 'on' },
-              { color: '#f0e4d3' }
-            ]
-          },{
-            featureType: 'road.highway',
-            elementType: 'geometry.fill',
-            stylers: [
-              { color: '#efe9e4' },
-              { lightness: -25 }
-            ]
-          }
-        ];
+    {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "lightness": 100
+            },
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#C6E2FF"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#C5E3BF"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#D1D1B8"
+            }
+        ]
+    }
+];
     //initialize new google map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 35.652832, lng: 139.839478},
         zoom: 11,
         styles: styles,
         mapTypeControl: false
+    });
+    //Search
+    var input = document.getElementById("search");
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
     });
 
     viewModel.makeMarkers();
@@ -204,18 +190,6 @@ function initMap() {
             new google.maps.Size(21,34));
         return markerImage;
     }
-    //I shouldn't use getElementById here, but is it best to put the function in ViewModel or initMap?
-    document.getElementById('hide-loc').addEventListener('click', function() {
-        for(i = 0; i < markers.length; i++) {
-          markers[i].setMap(null);
-        }
-    });
-    document.getElementById('show-loc').addEventListener('click', function() {
-        for(i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-        }
-    });
-
 
 var Location = function(data, marker) {
   this.title = ko.observable(data.title);
@@ -244,7 +218,7 @@ var ViewModel = function() {
     // model.forEach(function(item){
     //   self.locationList.push(new Location(item));
     // });
-    this.activateMarker = function(location) {
+    this.animateMarker = function(location) {
       var marker = location.marker;
       google.maps.event.trigger(marker, 'click');
     };
@@ -267,6 +241,18 @@ var ViewModel = function() {
         markers.push(marker);
       };
     };
+
+    this.hideMarkers = function() {
+      for(i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+      }
+    };
+
+    this.showMarkers = function() {
+      for(i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+      }
+    }
 
     this.addMarker = function() {
       var i = model.length - 1;
