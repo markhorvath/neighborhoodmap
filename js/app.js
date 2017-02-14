@@ -7,225 +7,261 @@ var highlightedIcon;
 var viewModel;
 
 var model = [{
-    title: 'Imperial Palace & East Garden (皇居)',
-    location: {
-      lat: 35.685360,
-      lng: 139.753372
+        title: 'Imperial Palace & East Garden (皇居)',
+        location: {
+            lat: 35.685360,
+            lng: 139.753372
+        },
+        type: 'Sight'
     },
-    type: 'Sight'
-  },
-  {
-    title: 'Akihabara Electric Town (秋葉原)',
-    location: {
-      lat: 35.702190,
-      lng: 139.774459
+    {
+        title: 'Akihabara Electric Town (秋葉原)',
+        location: {
+            lat: 35.702190,
+            lng: 139.774459
+        },
+        type: 'Sight'
     },
-    type: 'Sight'
-  },
-  {
-    title: 'Harajuku',
-    location: {
-      lat: 35.672010,
-      lng: 139.710212
+    {
+        title: 'Harajuku',
+        location: {
+            lat: 35.672010,
+            lng: 139.710212
+        },
+        type: 'Sight'
     },
-    type: 'Sight'
-  },
-  {
-    title: 'Tokyo Tower',
-    location: {
-      lat: 35.658772,
-      lng: 139.745454
+    {
+        title: 'Tokyo Tower',
+        location: {
+            lat: 35.658772,
+            lng: 139.745454
+        },
+        type: 'Sight'
     },
-    type: 'Sight'
-  },
-  {
-    title: 'Sensōji Temple',
-    location: {
-      lat: 35.714948,
-      lng: 139.796655
+    {
+        title: 'Sensōji Temple',
+        location: {
+            lat: 35.714948,
+            lng: 139.796655
+        },
+        type: 'Sight'
     },
-    type: 'Sight'
-  },
-  {
-    title: 'Craft Beer Market',
-    location: {
-      lat: 35.693382,
-      lng: 139.767303
+    {
+        title: 'Craft Beer Market',
+        location: {
+            lat: 35.693382,
+            lng: 139.767303
+        },
+        type: 'Food'
     },
-    type: 'Food'
-  },
-  {
-    title: 'Tapas Molecular Bar',
-    location: {
-      lat: 35.687058,
-      lng: 139.772695
+    {
+        title: 'Tapas Molecular Bar',
+        location: {
+            lat: 35.687058,
+            lng: 139.772695
+        },
+        type: 'Food'
     },
-    type: 'Food'
-  },
-  {
-    title: 'Hakushu Teppanyaki 白秋',
-    location: {
-      lat: 35.656496,
-      lng: 139.700942
-    },
-    type: 'Food'
-  }
+    {
+        title: 'Hakushu Teppanyaki 白秋',
+        location: {
+            lat: 35.656496,
+            lng: 139.700942
+        },
+        type: 'Food'
+    }
 ];
 
 function initMap() {
 
-    var styles = [
-    {
-        "featureType": "road",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "lightness": 100
-            },
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "visibility": "on"
-            },
-            {
-                "color": "#C6E2FF"
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
+    var styles = [{
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [{
+                    "lightness": 100
+                },
+                {
+                    "visibility": "simplified"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [{
+                    "visibility": "on"
+                },
+                {
+                    "color": "#C6E2FF"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "geometry.fill",
+            "stylers": [{
                 "color": "#C5E3BF"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
+            }]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [{
                 "color": "#D1D1B8"
-            }
-        ]
-    }
-];
+            }]
+        }
+    ];
     //initialize new google map
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 35.652832, lng: 139.839478},
+        center: {
+            lat: 35.652832,
+            lng: 139.839478
+        },
         zoom: 11,
         styles: styles,
         mapTypeControl: false
     });
-    //Search
-
 
     viewModel.makeMarkers();
     //variable to be used in populating markers' infowindows
     largeInfowindow = new google.maps.InfoWindow();
 
-    defaultIcon = makeMarkerIcon('00FF00');
+    defaultIcon = makeMarkerIcon('FE7569');
 
-    highlightedIcon = makeMarkerIcon('FFFF24');
+    highlightedIcon = makeMarkerIcon('7a9460');
 }
-    //function to populate marker-specific infowindow on click
-    function makeInfoWindow(marker, infowindow) {
-        if (infowindow.marker != marker) {
-          infowindow.setContent('');
-          infowindow.marker = marker;
+//function to populate marker-specific infowindow on click
+function makeInfoWindow(marker, infowindow) {
+    if (infowindow.marker != marker) {
+        infowindow.setContent('');
+        infowindow.marker = marker;
 
-          infowindow.addListener('closeclick', function() {
+        infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
-          });
-          var streetViewService = new google.maps.StreetViewService();
-          var radius = 50;
-          //function to get streetview object from google maps api, from course
-          function getStreetView(data, status) {
+        });
+        var streetViewService = new google.maps.StreetViewService();
+        var radius = 50;
+        //function to get streetview object from google maps api, from course
+        function getStreetView(data, status) {
             if (status == google.maps.StreetViewStatus.OK) {
-              var nearStreetViewLocation = data.location.latLng;
-              var heading = google.maps.geometry.spherical.computeHeading(
-                nearStreetViewLocation, marker.position);
+                var nearStreetViewLocation = data.location.latLng;
+                var heading = google.maps.geometry.spherical.computeHeading(
+                    nearStreetViewLocation, marker.position);
                 infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
                 var panoramaOptions = {
-                  position: nearStreetViewLocation,
-                  pov: {
-                    heading: heading,
-                    pitch: 30
-                  }
+                    position: nearStreetViewLocation,
+                    pov: {
+                        heading: heading,
+                        pitch: 30
+                    }
                 };
-              var panorama = new google.maps.StreetViewPanorama(
-                document.getElementById('pano'), panoramaOptions);
-            } else {//Is this okay to keep?  It's manipulating the DOM, correct?
-              infowindow.setContent('<div>' + marker.title + '</div>' +
-                '<div>No Street View Found</div>');
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('pano'), panoramaOptions);
+            } else { //Is this okay to keep?  It's manipulating the DOM, correct?
+                infowindow.setContent('<div>' + marker.title + '</div>' +
+                    '<div>No Street View Found</div>');
             }
-          }
-          streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-
-          infowindow.open(map, marker);
         }
-    };
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
 
-    function toggleBounce(marker) {
-        if (marker.getAnimation() !== null) {
-          marker.setAnimation(null);
-        } else {
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
-    };
-    //why does this change the shape of the original markers, is it the same image?
-    function makeMarkerIcon(markerColor) {
-        var markerImage = new google.maps.MarkerImage(
-            'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-            '|40|_|%E2%80%A2',
-            new google.maps.Size(21, 34),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(10, 34),
-            new google.maps.Size(21,34));
-        return markerImage;
+        infowindow.open(map, marker);
     }
-//Shouldn't this be in ViewModel?
+};
+
+function toggleBounce(marker) {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+};
+//why does this change the shape of the original markers, is it the same image?
+function makeMarkerIcon(markerColor) {
+    var markerImage = new google.maps.MarkerImage(
+        'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
+        '|40|_|%E2%80%A2',
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(10, 34),
+        new google.maps.Size(21, 34));
+    return markerImage;
+}
+
+
+
+//Should this be in ViewModel?
 var Location = function(data, marker) {
-  this.title = ko.observable(data.title);
+    this.title = ko.observable(data.title);
 
-  this.marker = marker;
-  this.marker.addListener('click', function() {
-    makeInfoWindow(this, largeInfowindow);
-  });
+    this.marker = marker;
+    this.marker.addListener('click', function() {
+        makeInfoWindow(this, largeInfowindow);
+    });
 
-  this.marker.addListener('click', function() {
-    toggleBounce(this);
-  });
+    this.marker.addListener('click', function() {
+        toggleBounce(this);
+    });
 
-  this.marker.addListener('mouseover', function() {
-    this.setIcon(highlightedIcon);
-  });
+    this.marker.addListener('mouseover', function() {
+        this.setIcon(highlightedIcon);
+    });
 
-  this.marker.addListener('mouseout', function() {
-    this.setIcon(defaultIcon);
-  });
+    this.marker.addListener('mouseout', function() {
+        this.setIcon(defaultIcon);
+    });
 };
 
 var ViewModel = function() {
     var self = this;
     this.locationTypes = ko.observableArray(["All", "Food and Drink", "Popular Sights"]);
     this.locationList = ko.observableArray([]);
+    this.newSearch = ko.observable("");
+    this.selectedOption = ko.observable("");
 
     this.animateMarker = function(location) {
-      var marker = location.marker;
-      google.maps.event.trigger(marker, 'click');
+        var marker = location.marker;
+        google.maps.event.trigger(marker, 'click');
     };
 
     this.makeMarkers = function() {
-      for(i = 0; i < model.length; i++) {
+        for (i = 0; i < model.length; i++) {
+            var position = model[i].location;
+            var title = model[i].title;
+
+            var marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: title,
+                animation: google.maps.Animation.DROP,
+                id: i,
+                icon: defaultIcon
+            });
+
+            self.locationList.push(new Location(model[i], marker));
+            markers.push(marker);
+        };
+    };
+
+    this.updateMarkers = function() {
+        if (this.selectedOption === "Food and Drink") {
+            console.log("helo");
+        };
+    };
+
+    this.hideMarkers = function() {
+        for (i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+    };
+
+    this.showMarkers = function() {
+        for (i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+
+    this.addMarker = function() {
+        var i = model.length - 1;
         var position = model[i].location;
         var title = model[i].title;
 
@@ -237,90 +273,128 @@ var ViewModel = function() {
             id: i,
             icon: defaultIcon
         });
-
-        self.locationList.push(new Location(model[i], marker));
-        markers.push(marker);
-      };
-    };
-
-    this.hideMarkers = function() {
-      for(i = 0; i < markers.length; i++) {
-          markers[i].setMap(null);
-      }
-    };
-
-    this.showMarkers = function() {
-      for(i = 0; i < markers.length; i++) {
-          markers[i].setMap(map);
-      }
-    }
-
-    this.addMarker = function() {
-      var i = model.length - 1;
-      var position = model[i].location;
-        var title = model[i].title;
-
-        var marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            id: i,
-            icon: defaultIcon
-        });
         self.locationList.push(new Location(model[i], marker));
         markers.push(marker);
     }
-    this.selectedOption = ko.observable("");
 
+
+    //I'm attempting to make it so that each option on the drop down menu will update the <li> using KO and will
+    //only show the markers for the selected option/type on the map
     self.selectedOption.subscribe(function(newValue) {
-      if (newValue === "Food and Drink") {
-        console.log("FD");
-      } else if (newValue === "Popular Sights") {
-        console.log("tldkj");
-      } else {
-        console.log("alksdjl");
-      }
+        if (newValue === "Food and Drink") {
+            self.locationList = ([]);
+            self.hideMarkers();
+            markers = [];
+            for (i = 0; i < model.length; i++) {
+                if (model[i].type === "Food") {
+                    var position = model[i].location;
+                    var title = model[i].title;
+
+                    var marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: title,
+                        animation: google.maps.Animation.DROP,
+                        icon: defaultIcon
+                    });
+
+                    self.locationList.push(new Location(model[i], marker));
+                    markers.push(marker);
+                }
+            };
+
+        } else if (newValue === "Popular Sights") {
+            self.locationList = ([]);
+            self.hideMarkers();
+            markers = [];
+            for (i = 0; i < model.length; i++) {
+                if (model[i].type === "Sight") {
+                    var position = model[i].location;
+                    var title = model[i].title;
+
+                    var marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: title,
+                        animation: google.maps.Animation.DROP,
+                        icon: defaultIcon
+                    });
+
+                    self.locationList.push(new Location(model[i], marker));
+                    markers.push(marker);
+                }
+            };
+        } else {
+            //when I try to use makeMarkers here I get an error saying google is not defined within the makeMarkers function
+            self.hideMarkers();
+            self.makeMarkers();
+        }
     });
 
-    this.newSearch = ko.observable("");
+
 
     this.searchPlaces = function() {
-    var input = this.newSearch();
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        var input = this.newSearch();
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
-      var bounds = map.getBounds();
-      this.hideMarkers();
-      var placesSer =  new google.maps.places.PlacesService(map);
-      placesSer.textSearch({
-        query: this.newSearch(),
-        bounds: bounds
-      }, function(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          console.log("Success");
+        map.addListener('bounds_changed', function() {
+            searchBox.setBounds(map.getBounds());
+        });
+        var bounds = map.getBounds();
+        this.hideMarkers();
+        var placesSer = new google.maps.places.PlacesService(map);
+        placesSer.textSearch({
+            query: this.newSearch(),
+            bounds: bounds
+        }, function(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                console.log("Success");
+            }
+        });
+    }
+
+    this.zoomToSearch = function() {
+        var geocoder = new google.maps.Geocoder();
+        var address = this.newSearch();
+        if (address == '') {
+            window.alert('You must enter a place or address.');
+        } else {
+
+            geocoder.geocode({
+                address: address
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    map.setZoom(12);
+                } else {
+                    window.alert('Error: Try a more specific address');
+                }
+            });
         }
-      });
+        this.newSearch("");
     }
 
     this.newTitle = ko.observable("");
     this.newLat = ko.observable("");
     this.newLng = ko.observable("");
     this.addLocation = function() {
-      if (this.newTitle() != "" && this.newLat() != "" && this.newLng() != "") {
-        model.push({title: this.newTitle(), location: {lat: Number(this.newLat()), lng: Number(this.newLng())}});
-        this.addMarker();
-        this.newTitle("");
-        this.newLat("");
-        this.newLng("");
-      }
+        if (this.newTitle() != "" && this.newLat() != "" && this.newLng() != "") {
+            model.push({
+                title: this.newTitle(),
+                location: {
+                    lat: Number(this.newLat()),
+                    lng: Number(this.newLng())
+                }
+            });
+            this.addMarker();
+            this.newTitle("");
+            this.newLat("");
+            this.newLng("");
+        }
     }.bind(this);
 };
 
 viewModel = new ViewModel();
 
 ko.applyBindings(viewModel);
-

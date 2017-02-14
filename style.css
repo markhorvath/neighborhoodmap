@@ -29,15 +29,17 @@ input {
     font-size: 12px;
 }
 h1 {
-    color: #525454;
+    color: black;
     font-size: 22px;
     margin: 0 0 10px 0;
     text-align: center;
 }
 #hide-loc,
 #show-loc {
-      width: 48%;
-      background-color: #FF6600;
+      width: 45%;
+}
+#button {
+
 }
 #search {
   display: auto;
@@ -64,7 +66,7 @@ hr {
   width: 25%;
   position: absolute;
   overflow-y: auto;
-  background-color: #00FF00;
+  background-color: white;
 }
 
 @media only screen and (min-device-width: 375px) and (max-device-width: 557px) {

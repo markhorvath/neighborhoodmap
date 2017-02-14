@@ -11,8 +11,8 @@
             <h1>Things to do in Tokyo:</h1>
             <input data-bind="click: showMarkers" id="show-loc" type="button" value="Show Markers">
             <input data-bind="click: hideMarkers" id="hide-loc" type="button" value="Hide Markers">
-            <input id="text-search" data-bind="textInput: newSearch" type="text" placeholder="Search Box"/>
-            <button type="submit" data-bind="click: $root.searchPlaces">Search</button>
+            <input id="text-search" data-bind="textInput: newSearch" type="text" placeholder="Zoom To: "/>
+            <button type="submit" data-bind="click: $root.zoomToSearch" id="button">Go!</button>
             <ul data-bind="foreach: locationList">
                 <li data-bind="text: title, click: $root.animateMarker" id="list"></li>
             </ul>
@@ -25,7 +25,7 @@
             <input data-bind='value: newLng, valueUpdate: "afterkeydown"' placeholder="Lng Coordinate" />
             <button type="submit" data-bind="enable: newLng().length > 0">Add</button>
             <hr>
-            <span> Search For: </span>
+            <span> Filter By: </span>
             <select data-bind="options: locationTypes, value: selectedOption"></select>
 
         </div>
