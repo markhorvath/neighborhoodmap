@@ -11,56 +11,64 @@ var model = [{
     location: {
       lat: 35.685360,
       lng: 139.753372
-    }
+    },
+    type: 'Sight'
   },
   {
     title: 'Akihabara Electric Town (秋葉原)',
     location: {
       lat: 35.702190,
       lng: 139.774459
-    }
+    },
+    type: 'Sight'
   },
   {
     title: 'Harajuku',
     location: {
       lat: 35.672010,
       lng: 139.710212
-    }
+    },
+    type: 'Sight'
   },
   {
     title: 'Tokyo Tower',
     location: {
       lat: 35.658772,
       lng: 139.745454
-    }
+    },
+    type: 'Sight'
   },
   {
     title: 'Sensōji Temple',
     location: {
       lat: 35.714948,
       lng: 139.796655
-    }
+    },
+    type: 'Sight'
   },
   {
     title: 'Craft Beer Market',
     location: {
       lat: 35.693382,
       lng: 139.767303
-    }
+    },
+    type: 'Food'
   },
   {
     title: 'Tapas Molecular Bar',
     location: {
       lat: 35.687058,
       lng: 139.772695
-    }
+    },
+    type: 'Food'
   },
   {
     title: 'Hakushu Teppanyaki 白秋',
     location: {
       lat: 35.656496,
       lng: 139.700942
-    }
+    },
+    type: 'Food'
   }
 ];
 
@@ -118,13 +126,7 @@ function initMap() {
         mapTypeControl: false
     });
     //Search
-    var input = document.getElementById("search");
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
 
     viewModel.makeMarkers();
     //variable to be used in populating markers' infowindows
@@ -179,7 +181,7 @@ function initMap() {
           marker.setAnimation(google.maps.Animation.BOUNCE);
         }
     };
-
+    //why does this change the shape of the original markers, is it the same image?
     function makeMarkerIcon(markerColor) {
         var markerImage = new google.maps.MarkerImage(
             'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
@@ -190,7 +192,7 @@ function initMap() {
             new google.maps.Size(21,34));
         return markerImage;
     }
-
+//Shouldn't this be in ViewModel?
 var Location = function(data, marker) {
   this.title = ko.observable(data.title);
 
@@ -214,10 +216,9 @@ var Location = function(data, marker) {
 
 var ViewModel = function() {
     var self = this;
+    this.locationTypes = ko.observableArray(["All", "Food and Drink", "Popular Sights"]);
     this.locationList = ko.observableArray([]);
-    // model.forEach(function(item){
-    //   self.locationList.push(new Location(item));
-    // });
+
     this.animateMarker = function(location) {
       var marker = location.marker;
       google.maps.event.trigger(marker, 'click');
@@ -269,6 +270,40 @@ var ViewModel = function() {
         });
         self.locationList.push(new Location(model[i], marker));
         markers.push(marker);
+    }
+    this.selectedOption = ko.observable("");
+
+    self.selectedOption.subscribe(function(newValue) {
+      if (newValue === "Food and Drink") {
+        console.log("FD");
+      } else if (newValue === "Popular Sights") {
+        console.log("tldkj");
+      } else {
+        console.log("alksdjl");
+      }
+    });
+
+    this.newSearch = ko.observable("");
+
+    this.searchPlaces = function() {
+    var input = this.newSearch();
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
+      var bounds = map.getBounds();
+      this.hideMarkers();
+      var placesSer =  new google.maps.places.PlacesService(map);
+      placesSer.textSearch({
+        query: this.newSearch(),
+        bounds: bounds
+      }, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          console.log("Success");
+        }
+      });
     }
 
     this.newTitle = ko.observable("");
