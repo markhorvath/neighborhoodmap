@@ -14,16 +14,8 @@
             <input id="text-search" data-bind="textInput: newSearch" type="text" placeholder="Zoom To: "/>
             <button type="submit" data-bind="click: $root.zoomToSearch" id="button">Go!</button>
             <ul data-bind="foreach: locationList">
-                <li data-bind="text: title, click: $root.animateMarker" id="list"></li>
+                <li data-bind="text: title, click: $root.animateMarker, visible: isVisible" id="list"></li>
             </ul>
-            <form data-bind="submit: addLocation">
-            Add title, lat coord and lng coord:
-            <input data-bind='value: newTitle, valueUpdate: "afterkeydown"' placeholder="Title" />
-            <button type="submit" data-bind="enable: newTitle().length > 0">Add</button>
-            <input data-bind='value: newLat, valueUpdate: "afterkeydown"' placeholder="Lat Coordinate" />
-            <button type="submit" data-bind="enable: newLat().length > 0">Add</button>
-            <input data-bind='value: newLng, valueUpdate: "afterkeydown"' placeholder="Lng Coordinate" />
-            <button type="submit" data-bind="enable: newLng().length > 0">Add</button>
             <hr>
             <span> Filter By: </span>
             <select data-bind="options: locationTypes, value: selectedOption"></select>

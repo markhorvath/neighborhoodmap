@@ -122,13 +122,19 @@ function initMap() {
         mapTypeControl: false
     });
 
-    viewModel.makeMarkers();
-    //variable to be used in populating markers' infowindows
-    largeInfowindow = new google.maps.InfoWindow();
+    viewModel = new ViewModel();
+
+    ko.applyBindings(viewModel);
 
     defaultIcon = makeMarkerIcon('FE7569');
 
     highlightedIcon = makeMarkerIcon('7a9460');
+
+    viewModel.makeMarkers();
+    //variable to be used in populating markers' infowindows
+    largeInfowindow = new google.maps.InfoWindow();
+
+
 }
 //function to populate marker-specific infowindow on click
 function makeInfoWindow(marker, infowindow) {
@@ -137,6 +143,7 @@ function makeInfoWindow(marker, infowindow) {
         infowindow.marker = marker;
 
         infowindow.addListener('closeclick', function() {
+            marker.setAnimation(null);
             infowindow.marker = null;
         });
         var streetViewService = new google.maps.StreetViewService();
@@ -189,9 +196,10 @@ function makeMarkerIcon(markerColor) {
 
 
 
-//Should this be in ViewModel?
 var Location = function(data, marker) {
-    this.title = ko.observable(data.title);
+    this.title = data.title;
+    this.type = data.type;
+    this.isVisible = ko.observable('true');
 
     this.marker = marker;
     this.marker.addListener('click', function() {
@@ -277,60 +285,28 @@ var ViewModel = function() {
         markers.push(marker);
     }
 
+    this.filter = ko.computed(function() {
+        var selectType = self.selectedOption();
+        var checkType;
 
-    //I'm attempting to make it so that each option on the drop down menu will update the <li> using KO and will
-    //only show the markers for the selected option/type on the map
-    self.selectedOption.subscribe(function(newValue) {
-        if (newValue === "Food and Drink") {
-            self.locationList = ([]);
-            self.hideMarkers();
-            markers = [];
-            for (i = 0; i < model.length; i++) {
-                if (model[i].type === "Food") {
-                    var position = model[i].location;
-                    var title = model[i].title;
-
-                    var marker = new google.maps.Marker({
-                        position: position,
-                        map: map,
-                        title: title,
-                        animation: google.maps.Animation.DROP,
-                        icon: defaultIcon
-                    });
-
-                    self.locationList.push(new Location(model[i], marker));
-                    markers.push(marker);
-                }
-            };
-
-        } else if (newValue === "Popular Sights") {
-            self.locationList = ([]);
-            self.hideMarkers();
-            markers = [];
-            for (i = 0; i < model.length; i++) {
-                if (model[i].type === "Sight") {
-                    var position = model[i].location;
-                    var title = model[i].title;
-
-                    var marker = new google.maps.Marker({
-                        position: position,
-                        map: map,
-                        title: title,
-                        animation: google.maps.Animation.DROP,
-                        icon: defaultIcon
-                    });
-
-                    self.locationList.push(new Location(model[i], marker));
-                    markers.push(marker);
-                }
-            };
+        if (selectType === "Food and Drink") {
+          checkType = "Food";
+        } else if (selectType === "Popular Sights") {
+          checkType = "Sight";
         } else {
-            //when I try to use makeMarkers here I get an error saying google is not defined within the makeMarkers function
-            self.hideMarkers();
-            self.makeMarkers();
+          checkType = "All";
         }
+        self.locationList().forEach(function(location){
+          var match;
+          if (checkType === "All") {
+            match = true;
+          } else {
+            match = (checkType == location.type);
+          }
+        location.isVisible(match);
+        location.marker.setVisible(match);
+        })
     });
-
 
 
     this.searchPlaces = function() {
@@ -374,27 +350,6 @@ var ViewModel = function() {
         }
         this.newSearch("");
     }
-
-    this.newTitle = ko.observable("");
-    this.newLat = ko.observable("");
-    this.newLng = ko.observable("");
-    this.addLocation = function() {
-        if (this.newTitle() != "" && this.newLat() != "" && this.newLng() != "") {
-            model.push({
-                title: this.newTitle(),
-                location: {
-                    lat: Number(this.newLat()),
-                    lng: Number(this.newLng())
-                }
-            });
-            this.addMarker();
-            this.newTitle("");
-            this.newLat("");
-            this.newLng("");
-        }
-    }.bind(this);
 };
 
-viewModel = new ViewModel();
 
-ko.applyBindings(viewModel);
