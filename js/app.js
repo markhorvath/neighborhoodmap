@@ -7,7 +7,7 @@ var highlightedIcon;
 var viewModel;
 
 var model = [{
-        title: 'Imperial Palace & East Garden (皇居)',
+        title: 'Imperial Palace & East Garden',
         location: {
             lat: 35.685360,
             lng: 139.753372
@@ -15,7 +15,7 @@ var model = [{
         type: 'Sight'
     },
     {
-        title: 'Akihabara Electric Town (秋葉原)',
+        title: 'Akihabara Electric Town',
         location: {
             lat: 35.702190,
             lng: 139.774459
@@ -39,7 +39,7 @@ var model = [{
         type: 'Sight'
     },
     {
-        title: 'Sensōji Temple',
+        title: 'Sensoji Temple',
         location: {
             lat: 35.714948,
             lng: 139.796655
@@ -63,7 +63,7 @@ var model = [{
         type: 'Food'
     },
     {
-        title: 'Hakushu Teppanyaki 白秋',
+        title: 'Hakushu',
         location: {
             lat: 35.656496,
             lng: 139.700942
@@ -133,8 +133,10 @@ function initMap() {
     viewModel.makeMarkers();
     //variable to be used in populating markers' infowindows
     largeInfowindow = new google.maps.InfoWindow();
+}
 
-
+function googleError() {
+    alert('Google Maps failed to load.');
 }
 //function to populate marker-specific infowindow on click
 function makeInfoWindow(marker, infowindow) {
@@ -199,6 +201,7 @@ function makeMarkerIcon(markerColor) {
 var Location = function(data, marker) {
     this.title = data.title;
     this.type = data.type;
+    this.location = data.location;
     this.isVisible = ko.observable('true');
 
     this.marker = marker;
@@ -229,6 +232,8 @@ var ViewModel = function() {
     this.animateMarker = function(location) {
         var marker = location.marker;
         google.maps.event.trigger(marker, 'click');
+        map.setCenter(location.location);
+        map.setZoom(12);
     };
 
     this.makeMarkers = function() {
@@ -247,12 +252,6 @@ var ViewModel = function() {
 
             self.locationList.push(new Location(model[i], marker));
             markers.push(marker);
-        };
-    };
-
-    this.updateMarkers = function() {
-        if (this.selectedOption === "Food and Drink") {
-            console.log("helo");
         };
     };
 
