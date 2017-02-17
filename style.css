@@ -5,25 +5,22 @@ body {
     margin: 0;
     padding: 0;
 }
-.container {
-    height: 100%;
-}
 li {
-  background-color: white;
-  border-style: double;
-  border-color: #000000;
-  color: black;
-  font-family: Arial, fantasy;
-  color : #000066;
+    background-color: white;
+    border-style: double;
+    border-color: #000000;
+    color: black;
+    font-family: Arial, fantasy;
+    color: #000066;
 }
 ul {
-  list-style: none;
-  padding-left: 0;
-  float:left;
-  width:100%;
+    list-style: none;
+    padding-left: 0;
+    float: left;
+    width: 100%;
 }
 li:hover {
-  background-color: #F9E559;
+    background-color: #F9E559;
 }
 input {
     font-size: 12px;
@@ -34,51 +31,50 @@ h1 {
     margin: 0 0 10px 0;
     text-align: center;
 }
-#hide-loc,
-#show-loc {
-      width: 45%;
-}
-#button {
-
-}
-#search {
-  display: auto;
-}
 hr {
     background: #D0D7D9;
     height: 1px;
     margin: 20px 0 20px 0;
     border: none;
 }
+.container {
+    height: 100%;
+}
+#hide-loc,
+#show-loc {
+    width: 45%;
+}
+#search {
+    display: auto;
+}
 #map {
-      bottom:0px;
-      height: 100%;
-      left: 25%;
-      position: absolute;
-      right: 0px;
+    bottom: 0px;
+    height: 100%;
+    left: 25%;
+    position: absolute;
+    right: 0px;
 }
 #pano {
-  height: 200px;
-  width: 200px;
+    height: 200px;
+    width: 200px;
 }
 .listview {
-  height: 100%;
-  width: 25%;
-  position: absolute;
-  overflow-y: auto;
-  background-color: #37FDFC;
-}
-
-@media only screen and (max-device-width: 557px) {
-  .listview {
-    height: 31%;
-    width: 100%;
+    height: 100%;
+    width: 25%;
     position: absolute;
     overflow-y: auto;
-  }
-  #map {
-    height: 69%;
-    width: 100%;
-    left: 0px;
-  }
+    background-color: #37FDFC;
+}
+@media only screen and (max-device-width: 557px) {
+    .listview {
+        height: 31%;
+        width: 100%;
+        position: absolute;
+        overflow-y: auto;
+    }
+    #map {
+        height: 69%;
+        width: 100%;
+        left: 0px;
+    }
 }

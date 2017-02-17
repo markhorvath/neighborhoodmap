@@ -142,7 +142,6 @@ function googleError() {
 function makeInfoWindow(marker, infowindow) {
     if (infowindow.marker != marker) {
         var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
-        //infowindow.setContent('');
         infowindow.marker = marker;
 
         infowindow.addListener('closeclick', function() {
@@ -151,36 +150,34 @@ function makeInfoWindow(marker, infowindow) {
         });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+        //Wikipedia api
+        var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title +
+            '&limit=1&format=json&callback=wikiCallback';
 
-      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title +
-      '&limit=1&format=json&callback=wikiCallback';
-      var wikiurl;
+        var wikiReqTimeOut = setTimeout(function() {
+            alert('Failed to load Wikipedia link.');
+        }, 5000);
+        //callback
+        $.ajax({
+            url: wikiUrl,
+            type: 'GET',
+            dataType: "jsonp",
+            success: function(response) {
+                var wikiLink = response[3];
 
-      var wikiReqTimeOut = setTimeout(function() {
-        alert('Failed to load Wikipedia link.');
-      }, 5000);
-
-      $.ajax({
-        url: wikiUrl,
-        type: 'GET',
-        dataType: "jsonp",
-        success: function(response) {
-          var wikiLink = response[3];
-
-          if (wikiLink.length != 0) {
-            infoContent += '<br><a href=' + wikiLink +'>' + wikiLink + '</a>';
-          } else {
-            infoContent += '<br><p>Unable to find wikipedia link</p>';
-          }
-        infowindow.setContent(infoContent);
-        clearTimeout(wikiReqTimeOut);
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
-      }
-    });
+                if (wikiLink.length != 0) {
+                    infoContent += '<br><a href=' + wikiLink + '>' + wikiLink + '</a>';
+                } else {
+                    infoContent += '<br><p>Unable to find wikipedia link</p>';
+                }
+                infowindow.setContent(infoContent);
+                clearTimeout(wikiReqTimeOut);
+                streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+            }
+        });
 
         //function to get streetview object from google maps api, from course
         function getStreetView(data, status) {
-          console.log(google.maps.StreetViewStatus.OK);
             if (status == google.maps.StreetViewStatus.OK) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
@@ -200,7 +197,6 @@ function makeInfoWindow(marker, infowindow) {
             }
         }
 
-
         infowindow.open(map, marker);
     }
 };
@@ -212,7 +208,7 @@ function toggleBounce(marker) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
     }
 };
-//why does this change the shape of the original markers, is it the same image?
+
 function makeMarkerIcon(markerColor) {
     var markerImage = new google.maps.MarkerImage(
         'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
@@ -225,7 +221,7 @@ function makeMarkerIcon(markerColor) {
 }
 
 
-
+//Location instance definition
 var Location = function(data, marker) {
     this.title = data.title;
     this.type = data.type;
@@ -233,8 +229,7 @@ var Location = function(data, marker) {
     this.isVisible = ko.observable('true');
     this.marker = marker;
 
-
-
+    //Listeners for markers
     this.marker.addListener('click', function() {
         makeInfoWindow(this, largeInfowindow);
     });
@@ -296,7 +291,7 @@ var ViewModel = function() {
             markers[i].setMap(map);
         }
     }
-
+    //This isn't used currently but I may do something with it later
     this.addMarker = function() {
         var i = model.length - 1;
         var position = model[i].location;
@@ -319,21 +314,21 @@ var ViewModel = function() {
         var checkType;
 
         if (selectType === "Food and Drink") {
-          checkType = "Food";
+            checkType = "Food";
         } else if (selectType === "Popular Sights") {
-          checkType = "Sight";
+            checkType = "Sight";
         } else {
-          checkType = "All";
+            checkType = "All";
         }
-        self.locationList().forEach(function(location){
-          var match;
-          if (checkType === "All") {
-            match = true;
-          } else {
-            match = (checkType == location.type);
-          }
-        location.isVisible(match);
-        location.marker.setVisible(match);
+        self.locationList().forEach(function(location) {
+            var match;
+            if (checkType === "All") {
+                match = true;
+            } else {
+                match = (checkType == location.type);
+            }
+            location.isVisible(match);
+            location.marker.setVisible(match);
         })
     });
 
@@ -352,12 +347,8 @@ var ViewModel = function() {
         placesSer.textSearch({
             query: this.newSearch(),
             bounds: bounds
-        }, function(results, status) {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                console.log("Success");
-            }
         });
-    }
+    };
 
     this.zoomToSearch = function() {
         var geocoder = new google.maps.Geocoder();
@@ -376,11 +367,7 @@ var ViewModel = function() {
                     window.alert('Error: Try a more specific address');
                 }
             });
-        }
+        };
         this.newSearch("");
     }
-
-
 };
-
-

@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="listview" id="listview">
+        <div class="listview">
             <h1>Things to do in Tokyo:</h1>
             <input data-bind="click: showMarkers" id="show-loc" type="button" value="Show Markers">
             <input data-bind="click: hideMarkers" id="hide-loc" type="button" value="Hide Markers">
@@ -21,7 +21,6 @@
             <ul data-bind="foreach: locationList">
                 <li data-bind="text: title, click: $root.animateMarker, visible: isVisible" id="list"></li>
             </ul>
-
         </div>
         <div id="map">
         </div>
