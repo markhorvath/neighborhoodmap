@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="listview">
+        <div class="listview" id="listview">
             <h1>Things to do in Tokyo:</h1>
             <input data-bind="click: showMarkers" id="show-loc" type="button" value="Show Markers">
             <input data-bind="click: hideMarkers" id="hide-loc" type="button" value="Hide Markers">
@@ -21,13 +21,16 @@
             <ul data-bind="foreach: locationList">
                 <li data-bind="text: title, click: $root.animateMarker, visible: isVisible" id="list"></li>
             </ul>
-
+            <div id="wiki">
+                <h4>Wikipedia Link:</h4>
+                <!-- <p data-bind="text: wikiLink"></p> -->
+            </div>
 
         </div>
         <div id="map">
         </div>
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>"
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>
     <script async defer

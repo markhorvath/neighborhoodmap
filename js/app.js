@@ -7,7 +7,7 @@ var highlightedIcon;
 var viewModel;
 
 var model = [{
-        title: 'Imperial Palace & East Garden',
+        title: 'Imperial Palace',
         location: {
             lat: 35.685360,
             lng: 139.753372
@@ -15,7 +15,7 @@ var model = [{
         type: 'Sight'
     },
     {
-        title: 'Akihabara Electric Town',
+        title: 'Akihabara',
         location: {
             lat: 35.702190,
             lng: 139.774459
@@ -141,7 +141,8 @@ function googleError() {
 //function to populate marker-specific infowindow on click
 function makeInfoWindow(marker, infowindow) {
     if (infowindow.marker != marker) {
-        infowindow.setContent('');
+        var infoContent = '<div>' + marker.title + '</div><div id="pano"></div>';
+        //infowindow.setContent('');
         infowindow.marker = marker;
 
         infowindow.addListener('closeclick', function() {
@@ -150,13 +151,41 @@ function makeInfoWindow(marker, infowindow) {
         });
         var streetViewService = new google.maps.StreetViewService();
         var radius = 50;
+
+      var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title +
+      '&limit=1&format=json&callback=wikiCallback';
+      var $listview = $('#listview');
+      var wikiurl;
+
+      var wikiReqTimeOut = setTimeout(function() {
+        alert('Failed to load Wikipedia link.');
+      }, 5000);
+
+      $.ajax({
+        url: wikiUrl,
+        type: 'GET',
+        dataType: "jsonp",
+        success: function(response) {
+          var wikiLink = response[3];
+
+          if (wikiLink.length != 0) {
+            infoContent = infoContent + '<br><a href=' + wikiLink +'>' + wikiLink + '</a>';
+          } else {
+            infoContent += '<br><p>Unable to find wikipedia link</p>';
+          }
+        infowindow.setContent(infoContent);
+        clearTimeout(wikiReqTimeOut);
+      }
+    });
+
         //function to get streetview object from google maps api, from course
         function getStreetView(data, status) {
+          console.log(google.maps.StreetViewStatus.OK);
             if (status == google.maps.StreetViewStatus.OK) {
                 var nearStreetViewLocation = data.location.latLng;
                 var heading = google.maps.geometry.spherical.computeHeading(
                     nearStreetViewLocation, marker.position);
-                infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+                infowindow.setContent(infoContent);
                 var panoramaOptions = {
                     position: nearStreetViewLocation,
                     pov: {
@@ -166,7 +195,7 @@ function makeInfoWindow(marker, infowindow) {
                 };
                 var panorama = new google.maps.StreetViewPanorama(
                     document.getElementById('pano'), panoramaOptions);
-            } else { //Is this okay to keep?  It's manipulating the DOM, correct?
+            } else {
                 infowindow.setContent('<div>' + marker.title + '</div>' +
                     '<div>No Street View Found</div>');
             }
@@ -203,8 +232,10 @@ var Location = function(data, marker) {
     this.type = data.type;
     this.location = data.location;
     this.isVisible = ko.observable('true');
-
     this.marker = marker;
+
+
+
     this.marker.addListener('click', function() {
         makeInfoWindow(this, largeInfowindow);
     });
@@ -349,6 +380,8 @@ var ViewModel = function() {
         }
         this.newSearch("");
     }
+
+
 };
 
 
