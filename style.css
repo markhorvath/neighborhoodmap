@@ -13,7 +13,7 @@ li {
   border-style: double;
   border-color: #000000;
   color: black;
-  font-family: Papyrus, fantasy;
+  font-family: Arial, fantasy;
   color : #000066;
 }
 ul {
@@ -66,13 +66,15 @@ hr {
   width: 25%;
   position: absolute;
   overflow-y: auto;
-  background-color: white;
+  background-color: #37FDFC;
 }
 
-@media only screen and (min-device-width: 375px) and (max-device-width: 557px) {
+@media only screen and (max-device-width: 557px) {
   .listview {
     height: 31%;
     width: 100%;
+    position: absolute;
+    overflow-y: auto;
   }
   #map {
     height: 69%;

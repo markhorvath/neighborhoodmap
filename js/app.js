@@ -63,10 +63,10 @@ var model = [{
         type: 'Food'
     },
     {
-        title: 'Hakushu',
+        title: 'Ichiran',
         location: {
-            lat: 35.656496,
-            lng: 139.700942
+            lat: 35.664786,
+            lng: 139.701864
         },
         type: 'Food'
     }
@@ -154,7 +154,6 @@ function makeInfoWindow(marker, infowindow) {
 
       var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title +
       '&limit=1&format=json&callback=wikiCallback';
-      var $listview = $('#listview');
       var wikiurl;
 
       var wikiReqTimeOut = setTimeout(function() {
@@ -169,12 +168,13 @@ function makeInfoWindow(marker, infowindow) {
           var wikiLink = response[3];
 
           if (wikiLink.length != 0) {
-            infoContent = infoContent + '<br><a href=' + wikiLink +'>' + wikiLink + '</a>';
+            infoContent += '<br><a href=' + wikiLink +'>' + wikiLink + '</a>';
           } else {
             infoContent += '<br><p>Unable to find wikipedia link</p>';
           }
         infowindow.setContent(infoContent);
         clearTimeout(wikiReqTimeOut);
+        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
       }
     });
 
@@ -196,11 +196,10 @@ function makeInfoWindow(marker, infowindow) {
                 var panorama = new google.maps.StreetViewPanorama(
                     document.getElementById('pano'), panoramaOptions);
             } else {
-                infowindow.setContent('<div>' + marker.title + '</div>' +
-                    '<div>No Street View Found</div>');
+                infowindow.setContent('<div>No Street View Found</div>' + infoContent);
             }
         }
-        streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+
 
         infowindow.open(map, marker);
     }
